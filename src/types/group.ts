@@ -1,4 +1,5 @@
 import { UserObjectSlim } from './user';
+import { ClassLabelObject } from './classLabel';
 
 export type GroupDataObject = {
   name: string;
@@ -25,6 +26,7 @@ export type GroupDataObject = {
   createtimeISO: string;
   memberPostCids: string;
   memberPostCidsArray: number[];
+  classLabel: ClassLabelObject;
 };
 
 export type GroupFullObject = GroupDataObject & GroupFullObjectProperties;
