@@ -1,5 +1,5 @@
 {
-  "name": "template-plugin",
+  "name": "nodebb-plugin-dev-template",
   "version": "9.2.4",
   "description": "Default composer for NodeBB",
   "main": "library.js",

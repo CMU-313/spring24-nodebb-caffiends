@@ -1,5 +1,5 @@
 {
-	"id": "template-plugin",
+	"id": "nodebb-plugin-dev-template",
 	"library": "library.js",
 	"hooks": [
 		{ "hook": "static:app.load", "method": "init" },
