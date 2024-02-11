@@ -696,6 +696,7 @@ define('composer', [
 				cid: categoryList.getSelectedCid(),
 				tags: tags.getTags(post_uuid),
 				timestamp: scheduler.getTimestamp(),
+				classLabel: ''
 			};
 		} else if (action === 'posts.reply') {
 			route = `/topics/${postData.tid}`;

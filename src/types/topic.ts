@@ -1,6 +1,7 @@
 import { CategoryObject } from './category';
 import { TagObject } from './tag';
 import { UserObjectSlim } from './user';
+import { ClassLabelObject } from './classLabel';
 
 export type TopicObject =
     TopicObjectSlim & TopicObjectCoreProperties & TopicObjectOptionalProperties;
@@ -17,6 +18,7 @@ export type TopicObjectCoreProperties = {
   bookmark: number;
   unreplied: boolean;
   icons: string[];
+  classLabel: ClassLabelObject;
 };
 
 export type TopicObjectOptionalProperties = {

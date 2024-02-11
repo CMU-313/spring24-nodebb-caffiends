@@ -33,6 +33,7 @@ module.exports = function (Topics) {
             lastposttime: 0,
             postcount: 0,
             viewcount: 0,
+            classLabel: data.classLabel
         };
 
         if (Array.isArray(data.tags) && data.tags.length) {
@@ -77,9 +78,9 @@ module.exports = function (Topics) {
     };
 
     Topics.post = async function (data) {
+        console.log(data);
         data = await plugins.hooks.fire('filter:topic.post', data);
         const { uid } = data;
-
         data.title = String(data.title).trim();
         data.tags = data.tags || [];
         if (data.content) {
