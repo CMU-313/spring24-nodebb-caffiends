@@ -26,6 +26,20 @@
 			<div class="category-list-container hidden-sm hidden-xs">
 				<!-- IMPORT partials/category-selector.tpl -->
 			</div>
+			<div>
+				<div component="classLabel-selector" class="btn-group bottom-sheet dropup">
+					<button type="button" class="btn btn-default dropdown=toggle">
+						<span component="classLabel-selector-selected">
+							<span class="visible-sm-inline visible-md-inline visible-lg-inline">Select Class
+							</span>
+							<span class="visible-xs-inline">
+								<i class="fa fa-fw fa-list">
+								</i>
+							</span>
+						</span>
+					</button>
+				</div>
+			</div>
 			{{{ end }}}
 
 			<!-- IF showHandleInput -->
