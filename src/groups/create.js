@@ -38,7 +38,10 @@ module.exports = function (Groups) {
             private: isPrivate ? 1 : 0,
             disableJoinRequests: disableJoinRequests,
             disableLeave: disableLeave,
+            classLabel: data.name
         };
+        
+        Groups.createClassLabel(data.name);
 
         await plugins.hooks.fire('filter:group.create', { group: groupData, data: data });
 
@@ -91,5 +94,9 @@ module.exports = function (Groups) {
         if (name.includes('/') || !slugify(name)) {
             throw new Error('[[error:invalid-group-name]]');
         }
+    };
+
+    Groups.createClassLabel = async function (classLabel) {
+        await db.setAdd(`classLabel:${classLabel}`, classLabel);
     };
 };
