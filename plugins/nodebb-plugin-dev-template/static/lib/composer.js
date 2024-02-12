@@ -423,6 +423,10 @@ define('composer', [
 		return null;
 	}
 
+	async function getGroups() {
+		return await api.get(`/api/groups`, {});
+	}
+
 	async function createNewComposer(post_uuid) {
 		var postData = composer.posts[post_uuid];
 
@@ -436,6 +440,9 @@ define('composer', [
 		// https://github.com/NodeBB/NodeBB/issues/2994 and
 		// https://github.com/NodeBB/NodeBB/issues/1951
 		// remove when 1951 is resolved
+
+		var groups = await getGroups();
+		var groupNames = groups ? groups.groups : [];
 
 		var title = postData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
 		postData.category = await getSelectedCategory(postData);
@@ -470,6 +477,7 @@ define('composer', [
 				// 	text: 'Text Label',
 				// }
 			],
+			groupNames: groupNames,
 		};
 
 		if (data.mobile) {

@@ -28,7 +28,7 @@
 			</div>
 			<div>
 				<div component="classLabel-selector" class="btn-group bottom-sheet dropup">
-					<button type="button" class="btn btn-default dropdown=toggle">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<span component="classLabel-selector-selected">
 							<span class="visible-sm-inline visible-md-inline visible-lg-inline">Select Class
 							</span>
@@ -38,6 +38,16 @@
 							</span>
 						</span>
 					</button>
+					<ul component="classLabel/list" class="dropdown-menu classLabel-dropdown-menu" role="menu">
+						{{{each groupNames}}}
+						<li role="presentation">
+							<a role="menu-item">
+								<span>{groupNames.name}
+								</span>
+							</a>
+						</li>
+						{{{end}}}
+					</ul>
 				</div>
 			</div>
 			{{{ end }}}
