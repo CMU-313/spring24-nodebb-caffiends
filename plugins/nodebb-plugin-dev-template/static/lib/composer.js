@@ -1,5 +1,4 @@
 'use strict';
-
 define('composer', [
 	'taskbar',
 	'translator',
@@ -197,13 +196,15 @@ define('composer', [
 		formatting.addButton(iconClass, onClick, title);
 	};
 
+	// newTopic: (data: object) => void
 	composer.newTopic = async (data) => {
+		console.assert(typeof data === 'object');
 		var pushData = {
 			action: 'topics.post',
 			cid: data.cid,
 			handle: data.handle,
-			title: data.title || 'fff',
-			body: data.body || 'd',
+			title: data.title || '',
+			body: data.body || '',
 			tags: data.tags || [],
 			modified: !!((data.title && data.title.length) || (data.body && data.body.length)),
 			isMain: true,
@@ -307,12 +308,15 @@ define('composer', [
 		}
 	};
 
+	// enhance: (postContainer: object, post_uuid: string, postData: object) => void
 	composer.enhance = function (postContainer, post_uuid, postData) {
 		/*
 			This method enhances a composer container with client-side sugar (preview, etc)
 			Everything in here also applies to the /compose route
 		*/
-
+		console.assert(typeof postContainer === 'object');
+		console.assert(typeof post_uuid === 'string');
+		console.assert(typeof postData === 'object');
 		if (!post_uuid && !postData) {
 			post_uuid = utils.generateUUID();
 			composer.posts[post_uuid] = ajaxify.data;
@@ -334,7 +338,6 @@ define('composer', [
 		tags.init(postContainer, composer.posts[post_uuid]);
 		autocomplete.init(postContainer, post_uuid);
 	
-
 		postContainer.on('change', 'input, textarea', function () {
 			composer.posts[post_uuid].modified = true;
 
@@ -431,7 +434,9 @@ define('composer', [
 		return await api.get(`/api/groups`, {});
 	}
 
+	// createNewComposer: (post_uuid: string) => void
 	async function createNewComposer(post_uuid) {
+		console.assert(typeof post_uuid === 'string');
 		var postData = composer.posts[post_uuid];
 
 		var isTopic = postData ? postData.hasOwnProperty('cid') : false;

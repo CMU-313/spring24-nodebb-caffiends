@@ -2,6 +2,7 @@
 'use strict';
 
 const _ = require('lodash');
+const assert = require('assert');
 
 const db = require('../database');
 const utils = require('../utils');
@@ -16,7 +17,9 @@ const categories = require('../categories');
 const translator = require('../translator');
 
 module.exports = function (Topics) {
+    // create: (data: object) => number
     Topics.create = async function (data) {
+        assert(typeof data === 'object');
         // This is an internal method, consider using Topics.post instead
         const timestamp = data.timestamp || Date.now();
 
@@ -74,6 +77,7 @@ module.exports = function (Topics) {
         }
 
         plugins.hooks.fire('action:topic.save', { topic: _.clone(topicData), data: data });
+        assert(typeof topicData.tid === 'number');
         return topicData.tid;
     };
 

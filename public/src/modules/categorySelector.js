@@ -5,7 +5,10 @@ define('categorySelector', [
 ], function (categorySearch, bootbox, hooks) {
     const categorySelector = {};
 
+    // init: (el: object, options: object) => void
     categorySelector.init = function (el, options) {
+        console.assert(typeof el === 'object');
+        console.assert(typeof options === 'object');
         if (!el || !el.length) {
             return;
         }
@@ -66,7 +69,10 @@ define('categorySelector', [
                 onSelect(selector.selectedClassLabel);
             });
             const defaultSelectHtml = selector.el.find('[component="classLabel-selector-selected"]').html();
+            
+            // selectClassLabel: (name: string) => void
             selector.selectClassLabel = function (name) {
+                console.assert(typeof name === 'string');
                 const classLabelEl = selector.el.find('[data-name="' + name + '"]');
                 selector.selectedClassLabel = {
                     name: name

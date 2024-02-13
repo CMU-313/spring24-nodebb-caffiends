@@ -6,7 +6,10 @@ define('composer/classLabelList', [
     var classLabelList = {};
     var selector;
 
+    // init: (postContainer: object, postData: object) => void
     classLabelList.init = function (postContainer, postData) {
+        console.assert(typeof postContainer === 'object');
+        console.assert(typeof postData === 'object');
         var listContainer = postContainer.find('.classLabel-list-container');
         if (!listContainer.length) {
             return;
@@ -41,15 +44,24 @@ define('composer/classLabelList', [
         postContainer.find('.classLabel-list-container [component="classLabel-selector"]').toggleClass('dropup', postContainer.outerHeight() < $(window).height() / 2)
     }
 
+    // getSelectedClasslabel: void => string
     classLabelList.getSelectedClassLabel = function () {
         var selectedClassLabel;
         if (selector) {
             selectedClassLabel = selector.getSelectedClassLabel();
         }
-        return selectedClassLabel ? selectedClassLabel.name : '';
+        if (selectedClassLabel) {
+            console.assert(typeof selectedClassLabel.name === 'string');
+            return selectedClassLabel.name;
+        }
+        return '';
     };
 
+    // changeClassLabel: (postContainer: object, postData: object, selectedClassLabel: object) => void
     async function changeClassLabel(postContainer, postData, selectedClassLabel) {
+        console.assert(typeof postContainer === 'object');
+        console.assert(typeof postData === 'object');
+        console.assert(typeof selectedClassLabel === 'object');
         postData.classLabel = selectedClassLabel.name;
         var uuid = postContainer.attr('data-uuid');
         taskbar.update('composer', uuid, {
