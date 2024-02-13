@@ -14,6 +14,7 @@
                 </ul>
             </div>
         </div>
+        
         <!-- ENDIF showSort -->
 
         <!-- IF !topics.length -->
