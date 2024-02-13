@@ -12,6 +12,25 @@ const slugify = require('../slugify');
 
 const groupsAPI = module.exports;
 
+// groupsAPI.getAllGroupsInfo = async function (caller) {
+//     if (!caller.uid) {
+//         throw new Error('[[error:not-logged-in]]');
+//     }
+
+//     // Optional: Check if the caller has the privilege to view all groups
+//     const canViewGroups = await privileges.global.can('groups:view', caller.uid);
+//     if (!canViewGroups) {
+//         throw new Error('[[error:no-privileges]]');
+//     }
+
+//     const allGroups = await groups.getAllGroups();
+//     const groupsData = await Promise.all(allGroups.map(groupName => groups.getGroupData(groupName)));
+
+//     // Optionally filter or process the groupsData here before returning
+
+//     return groupsData;
+// };
+
 groupsAPI.create = async function (caller, data) {
     if (!caller.uid) {
         throw new Error('[[error:no-privileges]]');
@@ -227,6 +246,7 @@ async function isOwner(caller, groupName) {
         throw new Error('[[error:no-privileges]]');
     }
 }
+
 
 function logGroupEvent(caller, event, additional) {
     events.log({
