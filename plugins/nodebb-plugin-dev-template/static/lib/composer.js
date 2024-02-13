@@ -8,6 +8,7 @@ define('composer', [
 	'composer/drafts',
 	'composer/tags',
 	'composer/categoryList',
+	'composer/classLabelList',
 	'composer/preview',
 	'composer/resize',
 	'composer/autocomplete',
@@ -22,7 +23,7 @@ define('composer', [
 	'search',
 	'screenfull',
 ], function (taskbar, translator, uploads, formatting, drafts, tags,
-	categoryList, preview, resize, autocomplete, scheduler, scrollStop,
+	categoryList, classLabelList, preview, resize, autocomplete, scheduler, scrollStop,
 	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search, screenfull) {
 	var composer = {
 		active: undefined,
@@ -196,7 +197,9 @@ define('composer', [
 		formatting.addButton(iconClass, onClick, title);
 	};
 
+	// newTopic: (data: object) => void
 	composer.newTopic = async (data) => {
+		console.assert(typeof data === 'object');
 		var pushData = {
 			action: 'topics.post',
 			cid: data.cid,
@@ -206,6 +209,7 @@ define('composer', [
 			tags: data.tags || [],
 			modified: !!((data.title && data.title.length) || (data.body && data.body.length)),
 			isMain: true,
+			classLabel: data.classLabel,
 		};
 
 		({ pushData } = await hooks.fire('filter:composer.topic.push', {
@@ -305,12 +309,15 @@ define('composer', [
 		}
 	};
 
+	// enhance: (postContainer: object, post_uuid: string, postData: object) => void
 	composer.enhance = function (postContainer, post_uuid, postData) {
 		/*
 			This method enhances a composer container with client-side sugar (preview, etc)
 			Everything in here also applies to the /compose route
 		*/
-
+		console.assert(typeof postContainer === 'object');
+		console.assert(typeof post_uuid === 'string');
+		console.assert(typeof postData === 'object');
 		if (!post_uuid && !postData) {
 			post_uuid = utils.generateUUID();
 			composer.posts[post_uuid] = ajaxify.data;
@@ -394,6 +401,8 @@ define('composer', [
 		drafts.init(postContainer, postData);
 		const draft = drafts.get(postData.save_id);
 
+		classLabelList.init(postContainer, composer.posts[post_uuid]);	
+
 		preview.render(postContainer, function () {
 			preview.matchScroll(postContainer);
 		});
@@ -423,7 +432,13 @@ define('composer', [
 		return null;
 	}
 
+	async function getGroups() {
+		return await api.get(`/api/groups`, {});
+	}
+
+	// createNewComposer: (post_uuid: string) => void
 	async function createNewComposer(post_uuid) {
+		console.assert(typeof post_uuid === 'string');
 		var postData = composer.posts[post_uuid];
 
 		var isTopic = postData ? postData.hasOwnProperty('cid') : false;
@@ -436,6 +451,9 @@ define('composer', [
 		// https://github.com/NodeBB/NodeBB/issues/2994 and
 		// https://github.com/NodeBB/NodeBB/issues/1951
 		// remove when 1951 is resolved
+
+		var groups = await getGroups();
+		var groupNames = groups ? groups.groups : [];
 
 		var title = postData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
 		postData.category = await getSelectedCategory(postData);
@@ -470,6 +488,8 @@ define('composer', [
 				// 	text: 'Text Label',
 				// }
 			],
+			groupNames: groupNames,
+			selectedClassLabel: postData.classLabel
 		};
 
 		if (data.mobile) {
@@ -696,6 +716,7 @@ define('composer', [
 				cid: categoryList.getSelectedCid(),
 				tags: tags.getTags(post_uuid),
 				timestamp: scheduler.getTimestamp(),
+				//classLabel: classLabelList.getSelectedClassLabel(),
 			};
 		} else if (action === 'posts.reply') {
 			route = `/topics/${postData.tid}`;

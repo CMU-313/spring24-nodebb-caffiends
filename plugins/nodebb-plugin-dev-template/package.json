@@ -3,10 +3,6 @@
   "version": "9.2.4",
   "description": "Default composer for NodeBB",
   "main": "library.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/NodeBB/nodebb-plugin-composer-default"
-  },
   "scripts": {
     "lint": "eslint ."
   },
@@ -21,9 +17,6 @@
     "email": "sales@nodebb.org"
   },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/NodeBB/nodebb-plugin-composer-default/issues"
-  },
   "readmeFilename": "README.md",
   "nbbpm": {
     "compatibility": "^2.5.0"

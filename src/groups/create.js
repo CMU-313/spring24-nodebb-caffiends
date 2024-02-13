@@ -4,9 +4,12 @@ const meta = require('../meta');
 const plugins = require('../plugins');
 const slugify = require('../slugify');
 const db = require('../database');
+const assert = require('assert');
 
 module.exports = function (Groups) {
+    // create: (data: object) => object
     Groups.create = async function (data) {
+        assert(typeof data === 'object');
         const isSystem = isSystemGroup(data);
         const timestamp = data.timestamp || Date.now();
         let disableJoinRequests = parseInt(data.disableJoinRequests, 10) === 1 ? 1 : 0;
@@ -39,6 +42,8 @@ module.exports = function (Groups) {
             disableJoinRequests: disableJoinRequests,
             disableLeave: disableLeave,
         };
+        
+        Groups.createClassLabel(data.name);
 
         await plugins.hooks.fire('filter:group.create', { group: groupData, data: data });
 
@@ -62,6 +67,7 @@ module.exports = function (Groups) {
 
         groupData = await Groups.getGroupData(groupData.name);
         plugins.hooks.fire('action:group.create', { group: groupData });
+        assert(typeof groupData === 'object');
         return groupData;
     };
 
@@ -91,5 +97,11 @@ module.exports = function (Groups) {
         if (name.includes('/') || !slugify(name)) {
             throw new Error('[[error:invalid-group-name]]');
         }
+    };
+
+    // createClassLabel: (classLabel: string) => void
+    Groups.createClassLabel = async function (classLabel) {
+        assert(typeof classLabel === 'string');
+        await db.setAdd(`classLabel:${classLabel}`, classLabel);
     };
 };

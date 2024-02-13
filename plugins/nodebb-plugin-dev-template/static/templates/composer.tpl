@@ -26,6 +26,25 @@
 			<div class="category-list-container hidden-sm hidden-xs">
 				<!-- IMPORT partials/category-selector.tpl -->
 			</div>
+			<div class="classLabel-list-container hidden-sm hidden-xs">
+				<div component="classLabel-selector" class="btn-group bottom-sheet dropup">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<span component="classLabel-selector-selected">
+							Select Class
+						</span>
+					</button>
+					<ul component="classLabel/list" class="dropdown-menu classLabel-dropdown-menu" role="menu">
+						{{{each groupNames}}}
+						<li role="presentation" data-name={groupNames.name}>
+							<a role="menu-item">
+								<span component="classLabel-markup">{groupNames.name}
+								</span>
+							</a>
+						</li>
+						{{{end}}}
+					</ul>
+				</div>
+			</div>
 			{{{ end }}}
 
 			<!-- IF showHandleInput -->

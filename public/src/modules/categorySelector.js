@@ -5,49 +5,91 @@ define('categorySelector', [
 ], function (categorySearch, bootbox, hooks) {
     const categorySelector = {};
 
+    // init: (el: object, options: object) => void
     categorySelector.init = function (el, options) {
+        console.assert(typeof el === 'object');
+        console.assert(typeof options === 'object');
         if (!el || !el.length) {
             return;
         }
         options = options || {};
         const onSelect = options.onSelect || function () {};
+        const classType = options.class || '';
+        var selector = {}
+        if (classType === '') {
+            options.states = options.states || ['watching', 'notwatching', 'ignoring'];
+            options.template = 'partials/category-selector';
+            hooks.fire('action:category.selector.options', { el: el, options: options });
 
-        options.states = options.states || ['watching', 'notwatching', 'ignoring'];
-        options.template = 'partials/category-selector';
-        hooks.fire('action:category.selector.options', { el: el, options: options });
+            categorySearch.init(el, options);
 
-        categorySearch.init(el, options);
-
-        const selector = {
-            el: el,
-            selectedCategory: null,
-        };
-        el.on('click', '[data-cid]', function () {
-            const categoryEl = $(this);
-            if (categoryEl.hasClass('disabled')) {
-                return false;
-            }
-            selector.selectCategory(categoryEl.attr('data-cid'));
-            onSelect(selector.selectedCategory);
-        });
-        const defaultSelectHtml = selector.el.find('[component="category-selector-selected"]').html();
-        selector.selectCategory = function (cid) {
-            const categoryEl = selector.el.find('[data-cid="' + cid + '"]');
-            selector.selectedCategory = {
-                cid: cid,
-                name: categoryEl.attr('data-name'),
+            selector = {
+                el: el,
+                selectedCategory: null,
             };
-
-            if (categoryEl.length) {
-                selector.el.find('[component="category-selector-selected"]').html(
-                    categoryEl.find('[component="category-markup"]').html()
-                );
-            } else {
-                selector.el.find('[component="category-selector-selected"]').html(
-                    defaultSelectHtml
-                );
-            }
-        };
+            el.on('click', '[data-cid]', function () {
+                const categoryEl = $(this);
+                if (categoryEl.hasClass('disabled')) {
+                    return false;
+                }
+                
+                selector.selectCategory(categoryEl.attr('data-cid'));
+                onSelect(selector.selectedCategory);
+                
+            });
+            const defaultSelectHtml = selector.el.find('[component="category-selector-selected"]').html();
+            selector.selectCategory = function (cid) {
+                const categoryEl = selector.el.find('[data-cid="' + cid + '"]');
+                selector.selectedCategory = {
+                    cid: cid,
+                    name: categoryEl.attr('data-name'),
+                };
+    
+                if (categoryEl.length) {
+                    selector.el.find('[component="category-selector-selected"]').html(
+                        categoryEl.find('[component="category-markup"]').html()
+                    );
+                } else {
+                    selector.el.find('[component="category-selector-selected"]').html(
+                        defaultSelectHtml
+                    );
+                }
+            };
+        } else if (classType === 'classLabel') {
+            selector = {
+                el: el,
+                selectedClassLabel: null,
+            };
+            el.on('click', '[data-name]', function () {
+                const classLabelEl = $(this);
+                // if (classLabelEl.hasClass('disabled')) {
+                //     return false;
+                // }
+                selector.selectClassLabel(classLabelEl.attr('data-name'));
+                onSelect(selector.selectedClassLabel);
+            });
+            const defaultSelectHtml = selector.el.find('[component="classLabel-selector-selected"]').html();
+            
+            // selectClassLabel: (name: string) => void
+            selector.selectClassLabel = function (name) {
+                console.assert(typeof name === 'string');
+                const classLabelEl = selector.el.find('[data-name="' + name + '"]');
+                selector.selectedClassLabel = {
+                    name: name
+                };
+                
+                if (classLabelEl.length) {
+                    selector.el.find('[component="classLabel-selector-selected"]').html(
+                        classLabelEl.find('[component="classLabel-markup"]').html()
+                    );
+                } else {
+                    selector.el.find('[component="classLabel-selector-selected"]').html(
+                        defaultSelectHtml
+                    );
+                }
+            };
+        }
+        
         selector.getSelectedCategory = function () {
             return selector.selectedCategory;
         };
@@ -74,7 +116,7 @@ define('categorySelector', [
                 },
             });
 
-            const selector = categorySelector.init(modal.find('[component="category-selector"]'), options);
+            var selector = categorySelector.init(modal.find('[component="category-selector"]'), options);
             function submit(ev) {
                 ev.preventDefault();
                 if (selector.selectedCategory) {
