@@ -25,6 +25,8 @@
                 <!-- IMPORT partials/category/watch.tpl -->
                 <!-- IMPORT partials/category/sort.tpl -->
                 <!-- IMPORT partials/category/tools.tpl -->
+                <!-- IMPORT partials/category/filterCourse.tpl -->
+                <!-- IMPORT partials/category/filterAuthor.tpl -->
             </span>
         </div>
 
