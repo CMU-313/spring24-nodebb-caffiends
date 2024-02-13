@@ -3,9 +3,7 @@
 
     <div class="row">
         <h1>[[pages:{template.name}, {username}]]</h1>
-        
-        <h1>pages:{template.name}</h1>
-        <h1>testing</h1>
+    
         <div class="groups list">
             <div component="groups/container" id="groups-list" class="row">
                 <!-- IF !groups.length -->
