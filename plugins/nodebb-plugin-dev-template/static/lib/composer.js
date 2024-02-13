@@ -8,6 +8,7 @@ define('composer', [
 	'composer/drafts',
 	'composer/tags',
 	'composer/categoryList',
+	'composer/classLabelList',
 	'composer/preview',
 	'composer/resize',
 	'composer/autocomplete',
@@ -22,7 +23,7 @@ define('composer', [
 	'search',
 	'screenfull',
 ], function (taskbar, translator, uploads, formatting, drafts, tags,
-	categoryList, preview, resize, autocomplete, scheduler, scrollStop,
+	categoryList, classLabelList, preview, resize, autocomplete, scheduler, scrollStop,
 	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search, screenfull) {
 	var composer = {
 		active: undefined,
@@ -201,11 +202,12 @@ define('composer', [
 			action: 'topics.post',
 			cid: data.cid,
 			handle: data.handle,
-			title: data.title || '',
-			body: data.body || '',
+			title: data.title || 'fff',
+			body: data.body || 'd',
 			tags: data.tags || [],
 			modified: !!((data.title && data.title.length) || (data.body && data.body.length)),
 			isMain: true,
+			classLabel: data.classLabel,
 		};
 
 		({ pushData } = await hooks.fire('filter:composer.topic.push', {
@@ -331,6 +333,7 @@ define('composer', [
 		uploads.initialize(post_uuid);
 		tags.init(postContainer, composer.posts[post_uuid]);
 		autocomplete.init(postContainer, post_uuid);
+	
 
 		postContainer.on('change', 'input, textarea', function () {
 			composer.posts[post_uuid].modified = true;
@@ -394,6 +397,7 @@ define('composer', [
 		drafts.init(postContainer, postData);
 		const draft = drafts.get(postData.save_id);
 
+		classLabelList.init(postContainer, composer.posts[post_uuid]);	
 		preview.render(postContainer, function () {
 			preview.matchScroll(postContainer);
 		});
@@ -478,6 +482,7 @@ define('composer', [
 				// }
 			],
 			groupNames: groupNames,
+			selectedClassLabel: postData.classLabel
 		};
 
 		if (data.mobile) {
@@ -704,7 +709,7 @@ define('composer', [
 				cid: categoryList.getSelectedCid(),
 				tags: tags.getTags(post_uuid),
 				timestamp: scheduler.getTimestamp(),
-				classLabel: ''
+				//classLabel: classLabelList.getSelectedClassLabel(),
 			};
 		} else if (action === 'posts.reply') {
 			route = `/topics/${postData.tid}`;
