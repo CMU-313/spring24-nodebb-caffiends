@@ -15,7 +15,7 @@ define('categorySelector', [
         options = options || {};
         const onSelect = options.onSelect || function () {};
         const classType = options.class || '';
-        var selector = {}
+        var selector = {};
         if (classType === '') {
             options.states = options.states || ['watching', 'notwatching', 'ignoring'];
             options.template = 'partials/category-selector';
@@ -32,10 +32,9 @@ define('categorySelector', [
                 if (categoryEl.hasClass('disabled')) {
                     return false;
                 }
-                
+
                 selector.selectCategory(categoryEl.attr('data-cid'));
                 onSelect(selector.selectedCategory);
-                
             });
             const defaultSelectHtml = selector.el.find('[component="category-selector-selected"]').html();
             selector.selectCategory = function (cid) {
@@ -44,7 +43,6 @@ define('categorySelector', [
                     cid: cid,
                     name: categoryEl.attr('data-name'),
                 };
-    
                 if (categoryEl.length) {
                     selector.el.find('[component="category-selector-selected"]').html(
                         categoryEl.find('[component="category-markup"]').html()
@@ -69,15 +67,13 @@ define('categorySelector', [
                 onSelect(selector.selectedClassLabel);
             });
             const defaultSelectHtml = selector.el.find('[component="classLabel-selector-selected"]').html();
-            
             // selectClassLabel: (name: string) => void
             selector.selectClassLabel = function (name) {
                 console.assert(typeof name === 'string');
                 const classLabelEl = selector.el.find('[data-name="' + name + '"]');
                 selector.selectedClassLabel = {
-                    name: name
+                    name: name,
                 };
-                
                 if (classLabelEl.length) {
                     selector.el.find('[component="classLabel-selector-selected"]').html(
                         classLabelEl.find('[component="classLabel-markup"]').html()
@@ -89,7 +85,6 @@ define('categorySelector', [
                 }
             };
         }
-        
         selector.getSelectedCategory = function () {
             return selector.selectedCategory;
         };

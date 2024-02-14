@@ -1,8 +1,7 @@
 'use strict';
 
 define('classLabelSelector', [
-    'bootbox', 'hooks',
-], function (bootbox, hooks) {
+], function () {
     const classLabelSelector = {};
 
     // init: (el: object, options: object) => void
@@ -23,9 +22,8 @@ define('classLabelSelector', [
             // if (classLabelEl.hasClass('disabled')) {
             //     return false;
             // }
-            alert("was");
             selector.el.find('[component="classLabel-selector-selected"]').text('fdfdf');
-            //selector.selectClassLabel(classLabelEl.attr('data-name'));
+            selector.selectClassLabel(classLabelEl.attr('data-name'));
             onSelect(selector.selectedClassLabel);
         });
         const defaultSelectHtml = selector.el.find('[component="classLabel-selector-selected"]').html();
@@ -35,9 +33,8 @@ define('classLabelSelector', [
             console.assert(typeof name === 'string');
             const classLabelEl = selector.el.find('[data-name="' + name + '"]');
             selector.selectedClassLabel = {
-                name: name
+                name: name,
             };
-            
             if (classLabelEl.length) {
                 selector.el.find('[component="classLabel-selector-selected"]').html(
                     classLabelEl.find('[component="classLabel-markup"]').html()
@@ -63,7 +60,7 @@ define('classLabelSelector', [
         options = options || {};
         options.onSelect = options.onSelect || function () {};
         options.onSubmit = options.onSubmit || function () {};
-        //app.parseAndTranslate();
+        // app.parseAndTranslate();
     };
 
     return classLabelSelector;
