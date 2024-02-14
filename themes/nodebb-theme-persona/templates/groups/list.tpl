@@ -32,9 +32,27 @@
 
     <hr />
 
+    <h3>My Groups</h3>
+    
     <div component="groups/container" class="row" id="groups-list" data-nextstart={nextStart}>
         <!-- IF groups.length -->
-        <!-- IMPORT partials/groups/list.tpl -->
+            <!-- IMPORT partials/groups/list.tpl -->
+        <!-- ELSE -->
+        <div class="col-xs-12">
+            <div class="alert alert-warning">
+            [[groups:no_groups_found]]
+            </div>
+        </div>
+        <!-- ENDIF groups.length -->
+    </div>
+
+    <hr />
+
+    <h3>Other Groups</h3>
+
+    <div component="groups/container" class="row" id="groups-list" data-nextstart={nextStart}>
+        <!-- IF groups.length -->
+            <!-- IMPORT partials/groups/list.tpl -->
         <!-- ELSE -->
         <div class="col-xs-12">
             <div class="alert alert-warning">
