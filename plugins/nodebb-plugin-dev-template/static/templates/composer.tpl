@@ -69,6 +69,33 @@
 			<div class="display-scheduler pull-right hidden-sm hidden-xs{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
+			<div>
+				<div component="category-selector" class="btn-group bottom-sheet">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> Public</button>
+						<span component="category-selector-selected">
+							<span class="visible-sm-inline visible-md-inline visible-lg-inline">
+							</span>
+							
+							
+						</span>
+						
+					</button>
+				</div>
+			</div>
+			<div>
+				<div component="category-selector" class="btn-group bottom-sheet">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> Private</button>
+						<span component="category-selector-selected">
+							<span class="visible-sm-inline visible-md-inline visible-lg-inline">
+							</span>
+							
+							
+						</span>
+						
+					</button>
+				</div>
+			</div>
+		
 
 			<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
 				<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
