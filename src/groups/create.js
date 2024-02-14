@@ -1,10 +1,10 @@
 'use strict';
 
+const assert = require('assert');
 const meta = require('../meta');
 const plugins = require('../plugins');
 const slugify = require('../slugify');
 const db = require('../database');
-const assert = require('assert');
 
 module.exports = function (Groups) {
     // create: (data: object) => object
@@ -42,7 +42,6 @@ module.exports = function (Groups) {
             disableJoinRequests: disableJoinRequests,
             disableLeave: disableLeave,
         };
-        
         Groups.createClassLabel(data.name);
 
         await plugins.hooks.fire('filter:group.create', { group: groupData, data: data });

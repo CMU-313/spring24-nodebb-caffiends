@@ -36,7 +36,7 @@ module.exports = function (Topics) {
             lastposttime: 0,
             postcount: 0,
             viewcount: 0,
-            classLabel: data.classLabel
+            classLabel: data.classLabel,
         };
 
         if (Array.isArray(data.tags) && data.tags.length) {
