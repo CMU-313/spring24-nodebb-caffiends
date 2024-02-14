@@ -50,8 +50,25 @@
 			<div class="display-scheduler pull-right hidden-sm hidden-xs{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
+			<div component="category-selector" class="btn-group bottom-sheet">
+				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"> Public</button>
+					<span component="category-selector-selected">
+						<span class="fa-stack">
+						</span>
+						
+					</span>
+					<span class="caret"></span>
+				</button>
+			</div>
 
 			<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
+
+				
+
+
+
+
+				<button class="btn btn-primary composer-submit" data-action="post" tabindex="-8"><i class="fa fa-check"></i> Privacy</button>
 				<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
 
 				<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
