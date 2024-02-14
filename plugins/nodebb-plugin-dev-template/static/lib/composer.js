@@ -1,4 +1,5 @@
 'use strict';
+
 define('composer', [
 	'taskbar',
 	'translator',
@@ -337,7 +338,7 @@ define('composer', [
 		uploads.initialize(post_uuid);
 		tags.init(postContainer, composer.posts[post_uuid]);
 		autocomplete.init(postContainer, post_uuid);
-	
+
 		postContainer.on('change', 'input, textarea', function () {
 			composer.posts[post_uuid].modified = true;
 
@@ -401,6 +402,7 @@ define('composer', [
 		const draft = drafts.get(postData.save_id);
 
 		classLabelList.init(postContainer, composer.posts[post_uuid]);	
+
 		preview.render(postContainer, function () {
 			preview.matchScroll(postContainer);
 		});
