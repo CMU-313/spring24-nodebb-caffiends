@@ -432,8 +432,8 @@ define('composer', [
 		return null;
 	}
 
-	async function getGroups() {
-		return await api.get(`/api/groups`, {});
+	async function getGroups(name) {
+		return await api.get(`/api/user/${name}/groups`, {});
 	}
 
 	// createNewComposer: (post_uuid: string) => void
@@ -452,7 +452,7 @@ define('composer', [
 		// https://github.com/NodeBB/NodeBB/issues/1951
 		// remove when 1951 is resolved
 
-		var groups = await getGroups();
+		var groups = await getGroups(app.user.userslug);
 		var groupNames = groups ? groups.groups : [];
 
 		var title = postData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
