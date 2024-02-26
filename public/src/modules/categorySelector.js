@@ -85,6 +85,9 @@ define('categorySelector', [
                 }
             };
         }
+        selector.getSelectedClassLabel = function () {
+            return selector.selectedClassLabel;
+        };
         selector.getSelectedCategory = function () {
             return selector.selectedCategory;
         };
