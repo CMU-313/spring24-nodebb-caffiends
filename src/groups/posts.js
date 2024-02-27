@@ -7,23 +7,30 @@ const posts = require('../posts');
 
 module.exports = function (Groups) {
     Groups.onNewPostMade = async function (postData) {
+        console.log(postData);
         if (!parseInt(postData.uid, 10)) {
             return;
         }
+        if (postData.classLabel == '') {
+            let groupNames = await Groups.getUserGroupMembership('groups:visible:createtime', [postData.uid]);
+            groupNames = groupNames[0];
 
-        let groupNames = await Groups.getUserGroupMembership('groups:visible:createtime', [postData.uid]);
-        groupNames = groupNames[0];
+            // Only process those groups that have the cid in its memberPostCids setting (or no setting at all)
+            const groupData = await groups.getGroupsFields(groupNames, ['memberPostCids']);
+            groupNames = groupNames.filter((groupName, idx) => (
+                !groupData[idx].memberPostCidsArray.length ||
+                groupData[idx].memberPostCidsArray.includes(postData.cid)
+            ));
 
-        // Only process those groups that have the cid in its memberPostCids setting (or no setting at all)
-        const groupData = await groups.getGroupsFields(groupNames, ['memberPostCids']);
-        groupNames = groupNames.filter((groupName, idx) => (
-            !groupData[idx].memberPostCidsArray.length ||
-            groupData[idx].memberPostCidsArray.includes(postData.cid)
-        ));
-
-        const keys = groupNames.map(groupName => `group:${groupName}:member:pids`);
-        await db.sortedSetsAdd(keys, postData.timestamp, postData.pid);
-        await Promise.all(groupNames.map(name => truncateMemberPosts(name)));
+            const keys = groupNames.map(groupName => `group:${groupName}:member:pids`);
+            await db.sortedSetsAdd(keys, postData.timestamp, postData.pid);
+            await Promise.all(groupNames.map(name => truncateMemberPosts(name)));
+        } else {
+            let groupName = postData.classLabel;
+            const key = `group:${groupName}:member:pids`;
+            await db.sortedSetAdd(key, postData.timestamp, postData.pid);
+            await Promise.all([truncateMemberPosts(groupName)]);
+        }
     };
 
     async function truncateMemberPosts(groupName) {
