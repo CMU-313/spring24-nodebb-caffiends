@@ -82,7 +82,6 @@ module.exports = function (Topics) {
     };
 
     Topics.post = async function (data) {
-        //console.log(data);
         data = await plugins.hooks.fire('filter:topic.post', data);
         const { uid } = data;
         data.title = String(data.title).trim();
@@ -161,14 +160,11 @@ module.exports = function (Topics) {
     };
 
     Topics.reply = async function (data) {
-        //console.log("this is reply");
-        
         data = await plugins.hooks.fire('filter:topic.reply', data);
         const { tid } = data;
         const { uid } = data;
 
         const topicData = await Topics.getTopicData(tid);
-        //console.log(topicData);
         await canReply(data, topicData);
 
         data.cid = topicData.cid;

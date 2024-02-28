@@ -406,7 +406,7 @@ describe('Groups', () => {
         });
 
         it('should create a classLabel for a group', (done) => {
-            Groups.create( { name: 'class label group'}, (err) => {
+            Groups.create({ name: 'class label group' }, (err) => {
                 assert.ifError(err);
                 db.isSetMember('classLabel:class label group', 'class label group', (err, isMember) => {
                     assert.ifError(err);
@@ -1502,10 +1502,10 @@ describe('Groups', () => {
             let pid = '';
             async.waterfall([
                 function (next) {
-                    Groups.create( {name: groupName1 }, next);
+                    Groups.create({ name: groupName1 }, next);
                 },
                 function (groupData, next) {
-                    Groups.create( {name: groupName2 }, next);
+                    Groups.create({ name: groupName2 }, next);
                 },
                 function (groupData, next) {
                     Groups.join([groupName1, groupName2], adminUid, next);
@@ -1513,7 +1513,7 @@ describe('Groups', () => {
                 function (next) {
                     categories.create({
                         name: 'classLabel Test Category',
-                        description: 'Test category made by test script'
+                        description: 'Test category made by test script',
                     }, next);
                 },
                 function (categoryObj, next) {
@@ -1536,8 +1536,8 @@ describe('Groups', () => {
                 function (posts, next) {
                     assert.equal(posts.length, 0);
                     next();
-                }
+                },
             ], done);
-        })
+        });
     });
 });

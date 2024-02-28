@@ -7,11 +7,10 @@ const posts = require('../posts');
 
 module.exports = function (Groups) {
     Groups.onNewPostMade = async function (postData) {
-        //console.log(postData);
         if (!parseInt(postData.uid, 10)) {
             return;
         }
-        if (postData.classLabel == '') {
+        if (postData.classLabel === '') {
             let groupNames = await Groups.getUserGroupMembership('groups:visible:createtime', [postData.uid]);
             groupNames = groupNames[0];
 
@@ -26,7 +25,7 @@ module.exports = function (Groups) {
             await db.sortedSetsAdd(keys, postData.timestamp, postData.pid);
             await Promise.all(groupNames.map(name => truncateMemberPosts(name)));
         } else {
-            let groupName = postData.classLabel;
+            const groupName = postData.classLabel;
             const key = `group:${groupName}:member:pids`;
             await db.sortedSetAdd(key, postData.timestamp, postData.pid);
             await Promise.all([truncateMemberPosts(groupName)]);
