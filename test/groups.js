@@ -9,6 +9,8 @@ const nconf = require('nconf');
 const db = require('./mocks/databasemock');
 const helpers = require('./helpers');
 const Groups = require('../src/groups');
+const topics = require('../src/topics');
+const categories = require('../src/categories');
 const User = require('../src/user');
 const socketGroups = require('../src/socket.io/groups');
 const apiGroups = require('../src/api/groups');
@@ -1490,5 +1492,52 @@ describe('Groups', () => {
             const groupData = await db.getObjectFields('group:Test', ['cover:url']);
             assert(!groupData['cover:url']);
         });
+    });
+
+    describe('group posts', () => {
+        it('should get only posts with classLabel corresponding to the group', (done) => {
+            // create two groups
+            const groupName1 = 'a';
+            const groupName2 = 'b';
+            let pid = '';
+            async.waterfall([
+                function (next) {
+                    Groups.create( {name: groupName1 }, next);
+                },
+                function (groupData, next) {
+                    Groups.create( {name: groupName2 }, next);
+                },
+                function (groupData, next) {
+                    Groups.join([groupName1, groupName2], adminUid, next);
+                },
+                function (next) {
+                    categories.create({
+                        name: 'classLabel Test Category',
+                        description: 'Test category made by test script'
+                    }, next);
+                },
+                function (categoryObj, next) {
+                    topics.post({
+                        uid: adminUid,
+                        title: 'classLabel topic test title',
+                        content: 'classLabel topic test content',
+                        cid: categoryObj.cid,
+                        classLabel: groupName1,
+                    }, next);
+                },
+                function (result, next) {
+                    pid = result.postData.pid;
+                    Groups.getLatestMemberPosts(groupName1, 1, adminUid, next);
+                },
+                function (posts, next) {
+                    assert.equal(posts[0].pid, pid);
+                    Groups.getLatestMemberPosts(groupName2, 1, adminUid, next);
+                },
+                function (posts, next) {
+                    assert.equal(posts.length, 0);
+                    next();
+                }
+            ], done);
+        })
     });
 });
