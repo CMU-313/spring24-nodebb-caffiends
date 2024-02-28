@@ -99,6 +99,11 @@ describe('Topic\'s', () => {
             });
         });
 
+        it ('should check for blank classLabel when not specified on topic creation', async () => {
+            const data = await apiTopics.get({ uid: adminUid }, { tid: topic.tid });
+            assert.equal(data.classLabel, '');
+        });
+
         it('should get post count', (done) => {
             socketTopics.postcount({ uid: adminUid }, topic.tid, (err, count) => {
                 assert.ifError(err);
