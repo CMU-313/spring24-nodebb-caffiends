@@ -14,8 +14,8 @@ const utils = require('../utils');
 module.exports = function (Posts) {
     Posts.create = async function (data) {
         // This is an internal method, consider using Topics.reply instead
-        console.log("this is post create");
-        console.log(data);
+        //console.log("this is post create");
+        //console.log(data);
         const { uid } = data;
         const { tid } = data;
         const content = data.content.toString();

@@ -7,7 +7,7 @@ const posts = require('../posts');
 
 module.exports = function (Groups) {
     Groups.onNewPostMade = async function (postData) {
-        console.log(postData);
+        //console.log(postData);
         if (!parseInt(postData.uid, 10)) {
             return;
         }

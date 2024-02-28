@@ -402,6 +402,17 @@ describe('Groups', () => {
                 });
             });
         });
+
+        it('should create a classLabel for a group', (done) => {
+            Groups.create( { name: 'class label group'}, (err) => {
+                assert.ifError(err);
+                db.isSetMember('classLabel:class label group', 'class label group', (err, isMember) => {
+                    assert.ifError(err);
+                    assert(isMember);
+                    done();
+                });
+            });
+        });
     });
 
     describe('.hide()', () => {
