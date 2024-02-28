@@ -81,6 +81,24 @@ describe('Topic\'s', () => {
             });
         });
 
+        it('should create a new topic with the proper classLabel', (done) => {
+            topics.post({
+                uid: topic.userId,
+                title: 'Class Label Test Post',
+                content: topic.content,
+                cid: topic.categoryId,
+                classLabel: 'administrators',
+            }, (err, result) => {
+                assert.ifError(err);
+                assert(result);
+                topics.getTopicData(result.topicData.tid, (err, topicData) => {
+                    assert.ifError(err);
+                    assert.equal(topicData.classLabel, 'administrators');
+                    done();
+                });
+            });
+        });
+
         it('should get post count', (done) => {
             socketTopics.postcount({ uid: adminUid }, topic.tid, (err, count) => {
                 assert.ifError(err);
