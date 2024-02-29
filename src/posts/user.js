@@ -38,6 +38,11 @@ module.exports = function (Posts) {
                 parseSignature(userData, uid, uidsSignatureSet),
                 plugins.hooks.fire('filter:posts.custom_profile_info', { profile: [], uid: userData.uid }),
             ]);
+            
+            // check if user private
+            if (userData.isPrivate && ! userHasPrivilegeToViewPrivatePost(uid, userData)) {
+                return null; //skip this post
+            }
 
             if (isMemberOfGroups && userData.groupTitleArray) {
                 userData.groupTitleArray.forEach((userGroup, index) => {
@@ -51,8 +56,23 @@ module.exports = function (Posts) {
 
             return await plugins.hooks.fire('filter:posts.modifyUserInfo', userData);
         }));
+        //remove null vals from result (posts that shouldn't be skipped)
+        const filteredResult = result.filter(user => user !== null);
+
         const hookResult = await plugins.hooks.fire('filter:posts.getUserInfoForPosts', { users: result });
         return hookResult.users;
+    };
+
+    //add function to check if user has viewing private post privileges
+    async function userHasPrivilegeToViewPrivatePost(uid, userData) {
+        //check if user is admin or has mod privs
+        const isAdmin = await privsUsers.isAdministrator(uid);
+
+        return isAdmin;
+    }
+
+    module.exports = {
+        userHasPrivilegeToViewPrivatePost,
     };
 
     Posts.overrideGuestHandle = function (postData, handle) {
