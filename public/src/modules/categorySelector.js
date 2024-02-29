@@ -85,7 +85,9 @@ define('categorySelector', [
                 }
             };
         }
+        // getSelectedClassLabel: void => object
         selector.getSelectedClassLabel = function () {
+            console.assert(typeof selector.selectedClassLabel === 'object');
             return selector.selectedClassLabel;
         };
         selector.getSelectedCategory = function () {

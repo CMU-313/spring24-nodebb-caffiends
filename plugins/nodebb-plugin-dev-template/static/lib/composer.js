@@ -432,8 +432,12 @@ define('composer', [
 		return null;
 	}
 
+	// getGroups: (name: string) -> object
 	async function getGroups(name) {
-		return await api.get(`/api/user/${name}/groups`, {});
+		console.assert(typeof name === 'string');
+	    const groups = await api.get(`/api/user/${name}/groups`, {});
+		console.assert(typeof groups === 'object');	
+		return await groups;
 	}
 
 	// createNewComposer: (post_uuid: string) => void

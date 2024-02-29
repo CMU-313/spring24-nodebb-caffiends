@@ -1,12 +1,15 @@
 'use strict';
 
+const assert = require('assert');
 const db = require('../database');
 const groups = require('.');
 const privileges = require('../privileges');
 const posts = require('../posts');
 
 module.exports = function (Groups) {
+    // onNewPostMade: (postData: object) => void
     Groups.onNewPostMade = async function (postData) {
+        assert(typeof postData === 'object');
         if (!parseInt(postData.uid, 10)) {
             return;
         }
