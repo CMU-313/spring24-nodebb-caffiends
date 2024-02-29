@@ -2,6 +2,13 @@ get:
   tags:
     - groups
   summary: Get user groups
+  # parameters:
+  #   - name: userslug
+  #     in: path
+  #     required: true
+  #     schema:
+  #       type: string
+  #     example: admin
   responses:
     "200":
       description: ""
@@ -99,6 +106,8 @@ get:
                                 example: "#f44336"
                         truncated:
                           type: boolean
+                  # userData: 
+                  #   type: 
                   allowGroupCreation:
                     type: boolean
                   nextStart:

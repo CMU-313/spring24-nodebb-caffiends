@@ -9,14 +9,24 @@ const user = require('../user');
 const helpers = require('./helpers');
 const pagination = require('../pagination');
 const privileges = require('../privileges');
+const user = require('../user');
+const accountHelpers = require('./accounts/helpers');
 
 const groupsController = module.exports;
 
 groupsController.list = async function (req, res) {
-    // const userData = await accountHelpers.getUserDataByUserSlug(req.params.userslug, req.uid, req.query);
-    // if (!userData) {
-    //     return next();
-    // }
+
+    // // groupsController.get = async function (req, res, next) {
+    // console.log(req.uid);]
+    console.log(req.uid);
+
+    const userslug = await user.getUserField(req.uid, 'userslug');
+    const userData = await accountHelpers.getUserDataByUserSlug(userslug, req.uid, req.query);
+    // console.log("hello!");
+    console.log(userData.uid);
+    // // if (!userData) {
+    // //     return next();
+    // // }
     // let groupsData = await groups.getUserGroups([userData.uid]);
     // groupsData = groupsData[0];
     // const groupNames = groupsData.filter(Boolean).map(group => group.name);
@@ -27,9 +37,13 @@ groupsController.list = async function (req, res) {
     // userData.groups = groupsData;
     // userData.title = `[[pages:account/groups, ${userData.username}]]`;
     // userData.breadcrumbs = helpers.buildBreadcrumbs([{ text: userData.username, url: `/user/${userData.userslug}` }, { text: '[[global:header.groups]]' }]);
-    // res.render('account/groups', userData);
+    // // res.render('account/groups', userData);
+    // // };
 
+    
     const sort = req.query.sort || 'alpha';
+
+    // const allowGroupCreation = await privileges.global.can('group:create', req.uid);
 
     const [groupData, allowGroupCreation] = await Promise.all([
         groups.getGroupsBySort(sort, 0, 14),
@@ -37,6 +51,7 @@ groupsController.list = async function (req, res) {
     ]);
 
     res.render('groups/list', {
+        // userData: userData, // new
         groups: groupData,
         allowGroupCreation: allowGroupCreation,
         nextStart: 15,
@@ -47,6 +62,8 @@ groupsController.list = async function (req, res) {
 
 groupsController.details = async function (req, res, next) {
     const lowercaseSlug = req.params.slug.toLowerCase();
+    console.log(req.params.slug);
+
     if (req.params.slug !== lowercaseSlug) {
         if (res.locals.isAPI) {
             req.params.slug = lowercaseSlug;

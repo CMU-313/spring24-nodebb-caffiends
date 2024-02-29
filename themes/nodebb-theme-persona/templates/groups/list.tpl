@@ -33,6 +33,10 @@
     <hr />
 
     <h3>My Groups</h3>
+    <h3>groups.userTitle</h3>
+    <h3>{groups.userTitle}</h3>
+    <h3>{groups.length}</h3>
+    <a href="{config.relative_path}/groups/{userslug}">{My Groups}</a>
     
     <div component="groups/container" class="row" id="groups-list" data-nextstart={nextStart}>
         <!-- IF groups.length -->

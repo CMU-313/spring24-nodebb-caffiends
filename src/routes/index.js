@@ -100,9 +100,12 @@ _mounts.users = (app, name, middleware, controllers) => {
 };
 
 _mounts.groups = (app, name, middleware, controllers) => {
-    const middlewares = [middleware.canViewGroups];
-
+    // const middlewares = [middleware.canViewGroups];
+    const middlewares = [middleware.exposeUid, middleware.canViewUsers];
+    
+    console.log("inside src/routes/index.js");
     setupPageRoute(app, `/${name}`, middlewares, controllers.groups.list);
+    // setupPageRoute(app, `/${name}/:userslug/`, middlewares, controllers.groups.list);
     setupPageRoute(app, `/${name}/:slug`, middlewares, controllers.groups.details);
     setupPageRoute(app, `/${name}/:slug/members`, middlewares, controllers.groups.members);
 };
