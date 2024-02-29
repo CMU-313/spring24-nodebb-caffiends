@@ -12,8 +12,6 @@ PostObject:
     uid:
       type: number
       description: A user identifier
-    classLabel:
-      type: string
     timestamp:
       type: number
     deleted:

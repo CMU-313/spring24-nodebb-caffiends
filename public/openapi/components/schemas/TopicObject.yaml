@@ -5,6 +5,8 @@ TopicObject:
       properties:
         lastposttime:
           type: number
+        classLabel:
+          type: string
         category:
           type: object
           properties:

@@ -16,6 +16,8 @@ post:
             title:
               type: string
               example: Test topic
+            classLabel:
+              type: string
             content:
               type: string
               example: This is the test topic's content
