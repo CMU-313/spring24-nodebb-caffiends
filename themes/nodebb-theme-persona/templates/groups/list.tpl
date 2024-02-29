@@ -33,10 +33,6 @@
     <hr />
 
     <h3>My Groups</h3>
-    <h3>groups.userTitle</h3>
-    <h3>{groups.userTitle}</h3>
-    <h3>{groups.length}</h3>
-    <a href="{config.relative_path}/groups/{userslug}">{My Groups}</a>
     
     <div component="groups/container" class="row" id="groups-list" data-nextstart={nextStart}>
         <!-- IF groups.length -->
@@ -55,8 +51,8 @@
     <h3>Other Groups</h3>
 
     <div component="groups/container" class="row" id="groups-list" data-nextstart={nextStart}>
-        <!-- IF groups.length -->
-            <!-- IMPORT partials/groups/list.tpl -->
+        <!-- IF othergroups.length -->
+            <!-- IMPORT partials/groups/otherlist.tpl -->
         <!-- ELSE -->
         <div class="col-xs-12">
             <div class="alert alert-warning">
@@ -64,5 +60,5 @@
             </div>
         </div>
         <!-- ENDIF groups.length -->
-    </div>
+    </div> 
 </div>
