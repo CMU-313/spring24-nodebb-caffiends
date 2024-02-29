@@ -1,5 +1,6 @@
 <!-- Include handleFilter -->
-<script type="text/javascript" src="src/categories/handleFilter.js"></script>
+<script type="text/javascript" src="../src/categories/handleFilter.js"></script>
+
 
 
 <!-- IMPORT partials/breadcrumbs.tpl -->
