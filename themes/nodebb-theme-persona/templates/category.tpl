@@ -1,3 +1,7 @@
+<!-- Include handleFilter -->
+<script type="text/javascript" src="src/categories/handleFilter.js"></script>
+
+
 <!-- IMPORT partials/breadcrumbs.tpl -->
 <div data-widget-area="header">
     {{{each widgets.header}}}
