@@ -65,8 +65,20 @@ module.exports = function (Posts) {
 
     //add function to check if user has viewing private post privileges
     async function userHasPrivilegeToViewPrivatePost(uid, userData) {
+        // Check the type signature of function parameters
+        assert.strictEqual(typeof uid, 'number', 'uid should be a number');
+        assert.strictEqual(typeof userData, 'object', 'userData should be an object');
+
+        // Check the type signature of function return
+        assert.strictEqual(typeof (await privsUsers.isAdministrator(uid)), 'boolean', 'isAdministrator should return a boolean');
+
         //check if user is admin or has mod privs
         const isAdmin = await privsUsers.isAdministrator(uid);
+         // Additional checks for the userData.isPrivate condition
+        if (userData.isPrivate) {
+            assert.strictEqual(typeof userData.isPrivate, 'boolean', 'userData.isPrivate should be a boolean');
+            assert.strictEqual(isAdmin, true, 'User should be admin to view private post');
+        }
 
         return isAdmin;
     }

@@ -161,6 +161,60 @@ describe('Post\'s', () => {
         });
     });
 
+    // privacy unit test
+    describe('Private Posts Visibility', function () {
+        it('Private posts should be hidden from non-admin users', async function () {
+            const userId = 123;
+
+            const userPosts = await posts.getPostsByPids(userId);
+
+ 
+            // Check the type signature of function parameters
+            assert.strictEqual(typeof userId, 'number', 'userId should be a number');
+
+            // Check the type signature of function return
+            assert.strictEqual(typeof userPosts, 'object', 'userPosts should be an object');
+            assert.strictEqual(Array.isArray(userPosts), true, 'userPosts should be an array');
+
+            // Iterate through userPosts and assert the type of each post object
+            userPosts.forEach(post => {
+                assert.strictEqual(typeof post, 'object', 'post should be an object');
+                assert.strictEqual(typeof post.privacy, 'string', 'post.privacy should be a string');
+                // Add more assertions for other properties as needed
+            });
+
+            // Additional assertion for the test case
+            const hasPrivatePosts = userPosts.some(post => post.privacy === 'private');
+            assert.strictEqual(hasPrivatePosts, false, 'Non-admin users should not view private posts');
+        });
+
+        it('Admin users should see private posts', async function () {
+   
+            const adminUserId = 456;
+
+            const adminUserPosts = await posts.getPostsByPids(adminUserId);
+
+            // Check the type signature of function parameters
+            assert.strictEqual(typeof adminUserId, 'number', 'adminUserId should be a number');
+
+            // Check the type signature of function return
+            assert.strictEqual(typeof adminUserPosts, 'object', 'adminUserPosts should be an object');
+            assert.strictEqual(Array.isArray(adminUserPosts), true, 'adminUserPosts should be an array');
+
+            // Iterate through adminUserPosts and assert the type of each post object
+            adminUserPosts.forEach(post => {
+                assert.strictEqual(typeof post, 'object', 'post should be an object');
+                assert.strictEqual(typeof post.privacy, 'string', 'post.privacy should be a string');
+                // Add more assertions for other properties as needed
+            });
+
+            // Additional assertion for the test case
+            const hasPrivatePosts = adminUserPosts.some(post => post.privacy === 'private');
+            assert.strictEqual(hasPrivatePosts, true, 'Admin users should view private posts');
+        });
+    });
+
+
     describe('voting', () => {
         it('should fail to upvote post if group does not have upvote permission', async () => {
             await privileges.categories.rescind(['groups:posts:upvote', 'groups:posts:downvote'], cid, 'registered-users');
