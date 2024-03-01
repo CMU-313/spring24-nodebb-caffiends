@@ -5,6 +5,8 @@ The feature that I worked on was the private and public posts toggling so that o
 don't commit any academic integrity violations. This enables students to share more specific issues about problems they are facing on academic work without sharing too much with the class that may ruin the challenge of solving the problem for others. My implementation currently lacks the ability to interface
 with the frontend; however, it possesses the ability to filter posts by private and public types.
 
+UI Implementation: 
+
 Automatic Private Posts Filtering:
 - Allow the user to view only public posts on their feed
 - Allow only the admin to view privated posts on their feed
@@ -17,6 +19,30 @@ test/posts.js: it('Admin users should see private posts', async function () ) - 
 there is already a test for non-admin users in place and this ensures that the admin can view the posts that are privated. 
 
 These backend tests are sufficient for the implemented filtering function I added. The UI was tested visually. Although the backend for filtering remains unconnected to the frontend with a few features missing, there is function in the handling of privated posts.
+
+
+
+## Michael Wang Documentation
+
+The feature I tried to implemement is to add "filter by Course" and "filter by Author" option when the user is viewing topics after clicked into categories.js (by utilizing group tag and author). With this feature, the user is able to view the posts that are relevant to their course more easily, and they can also find their instructors quicker. 
+
+### Filter Functionality 
+- Allow user to filter all of the topics in every category by Course name
+- Allow user to filter all of the topics in every category by Author name
+
+### Filter User Testing
+This is the frontend visual for the two filter buttons: 
+![alt text](filter_1.png)
+![alt text](filter_2.png)
+
+### Filter Unit Tests: 
+test/filterCourseTest.js
+- Test handles the following scenerios:
+- Should filter courses by group
+- Should prevent default behavior when clicked
+- Should filter courses for the second group
+- Should handle multiple group links
+- Should handle dynamically added group links
 
 
 ## Kate Lee Documentation
