@@ -1,3 +1,27 @@
+
+Alejandro Miranda Documentation
+
+The feature that I worked on was the private and public posts toggling so that only admins can view privated posts by students. The goal of the private and public posts feature is to enable to students to provide information to the professor/admin while maintaining confidentiality and ensuring that they
+don't commit any academic integrity violations. This enables students to share more specific issues about problems they are facing on academic work without sharing too much with the class that may ruin the challenge of solving the problem for others. My implementation currently lacks the ability to interface
+with the frontend; however, it possesses the ability to filter posts by private and public types.
+
+UI Implementation: 
+
+Automatic Private Posts Filtering:
+- Allow the user to view only public posts on their feed
+- Allow only the admin to view privated posts on their feed
+
+Testing:
+test/posts.js: it('Private posts should be hidden from non-admin users', async function () )- should test the posts ability to remain privated and unseen by non-admin users. This is sufficient for the users side since it ensures
+visibility is present only to the students
+
+test/posts.js: it('Admin users should see private posts', async function () ) - tests the posts visibility to the admin users. This ensures that the posts maintain visibility to the intended audience - the admin/professor. This provides sufficient coverage, since
+there is already a test for non-admin users in place and this ensures that the admin can view the posts that are privated. 
+
+These backend tests are sufficient for the implemented filtering function I added. The UI was tested visually. Although the backend for filtering remains unconnected to the frontend with a few features missing, there is function in the handling of privated posts.
+
+
+
 ## Michael Wang Documentation
 
 The feature I tried to implemement is to add "filter by Course" and "filter by Author" option when the user is viewing topics after clicked into categories.js (by utilizing group tag and author). With this feature, the user is able to view the posts that are relevant to their course more easily, and they can also find their instructors quicker. 
@@ -20,7 +44,7 @@ test/filterCourseTest.js
 - Should handle multiple group links
 - Should handle dynamically added group links
 
-=======
+
 ## Kate Lee Documentation
 
 The feature I worked on is filtering the main Groups page into two different subsections called My Groups and Other Groups. This was deemed a useful feature, as if a user sees all groups that exists on nodebb in one big page (i.e. a CMU student seeing all CMU classes to currently exist on nodebb), it is very hard for the user to find the groups they actually want to see, which are the groups that they are a part of. In My Groups, the user should see the groups that they are a member of, and in Other Groups should be all the other groups that the user is not a part of. Clicking on the groups themselves acts the same way as it did previously, leading the user to the page specific to the group.
@@ -82,3 +106,4 @@ test/topics.js: it('should check for blank classLabel when not specified on topi
 test/groups/js: it('should get only posts with classLabel corresponding to the group') - This test checks that the only posts viewable for a group are the ones tagged with its classLabel. This is a sufficient test because we create new groups, join them as a user,  create a topic tagged with the classLabel of one group, retrieve the latest member posts of both groups from the database, which are the ones that are being viewed in the group page, and ensure that the topic is in group of the tagged classLabel and not in the other group. 
 
 These tests are sufficient for the changes I made for the backend system. I was not able to find any UI tests, so the UI changes I made do not have automated tests. As for the user interaction with classLabel issue, where users gain access to the classLabel for a course group upon joining a group, viewing/using classLabels for only the classes they are a member of, and users adding only at most 1 classLabel for a topic, these are enforced by the composer UI, and the backend that interacts with the composer UI is already tested (retrieving the groups that a user is part of is an api call that is tested, and only choosing at most one classLabel is enforced by the select class button in the composer, which sets the classLabel)
+

@@ -5,7 +5,7 @@ const validator = require('validator');
 const _ = require('lodash');
 
 const db = require('../database');
-const user = require('../user');
+const user = require('../user'); 
 const topics = require('../topics');
 const groups = require('../groups');
 const meta = require('../meta');
@@ -38,6 +38,11 @@ module.exports = function (Posts) {
                 parseSignature(userData, uid, uidsSignatureSet),
                 plugins.hooks.fire('filter:posts.custom_profile_info', { profile: [], uid: userData.uid }),
             ]);
+            
+            // check if user private
+            if (userData.isPrivate && ! userHasPrivilegeToViewPrivatePost(uid, userData)) {
+                return null; //skip this post
+            }
 
             if (isMemberOfGroups && userData.groupTitleArray) {
                 userData.groupTitleArray.forEach((userGroup, index) => {
@@ -51,8 +56,35 @@ module.exports = function (Posts) {
 
             return await plugins.hooks.fire('filter:posts.modifyUserInfo', userData);
         }));
+        //remove null vals from result (posts that shouldn't be skipped)
+        const filteredResult = result.filter(user => user !== null);
+
         const hookResult = await plugins.hooks.fire('filter:posts.getUserInfoForPosts', { users: result });
         return hookResult.users;
+    };
+
+    //add function to check if user has viewing private post privileges
+    async function userHasPrivilegeToViewPrivatePost(uid, userData) {
+        // Check the type signature of function parameters
+        assert.strictEqual(typeof uid, 'number', 'uid should be a number');
+        assert.strictEqual(typeof userData, 'object', 'userData should be an object');
+
+        // Check the type signature of function return
+        assert.strictEqual(typeof (await privsUsers.isAdministrator(uid)), 'boolean', 'isAdministrator should return a boolean');
+
+        //check if user is admin or has mod privs
+        const isAdmin = await privsUsers.isAdministrator(uid);
+         // Additional checks for the userData.isPrivate condition
+        if (userData.isPrivate) {
+            assert.strictEqual(typeof userData.isPrivate, 'boolean', 'userData.isPrivate should be a boolean');
+            assert.strictEqual(isAdmin, true, 'User should be admin to view private post');
+        }
+
+        return isAdmin;
+    }
+
+    module.exports = {
+        userHasPrivilegeToViewPrivatePost,
     };
 
     Posts.overrideGuestHandle = function (postData, handle) {
