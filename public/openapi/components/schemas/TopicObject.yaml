@@ -5,6 +5,8 @@ TopicObject:
       properties:
         lastposttime:
           type: number
+        classLabel:
+          type: string
         category:
           type: object
           properties:
@@ -201,6 +203,8 @@ TopicObjectSlim:
           type: number
           description: A category identifier
         title:
+          type: string
+        classLabel:
           type: string
         slug:
           type: string

@@ -35,7 +35,7 @@
 					</button>
 					<ul component="classLabel/list" class="dropdown-menu classLabel-dropdown-menu" role="menu">
 						{{{each groupNames}}}
-						<li role="presentation" data-name={groupNames.name}>
+						<li role="presentation" data-name="{groupNames.name}">
 							<a role="menu-item">
 								<span component="classLabel-markup">{groupNames.name}
 								</span>

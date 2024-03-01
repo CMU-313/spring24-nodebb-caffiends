@@ -937,6 +937,7 @@ describe('Controllers', () => {
                     title: 'topic title',
                     content: 'test topic content',
                     cid: cid,
+                    classLabel: 'group-details',
                 }, (err) => {
                     assert.ifError(err);
                     request(`${nconf.get('url')}/api/groups/group-details`, { json: true }, (err, res, body) => {
