@@ -32,6 +32,8 @@ get:
                   tid:
                     type: number
                     description: A topic identifier
+                  classLabel:
+                    type: string
                   content:
                     type: string
                   timestamp:

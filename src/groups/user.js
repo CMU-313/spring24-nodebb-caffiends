@@ -32,6 +32,25 @@ module.exports = function (Groups) {
         return groupNames.filter((name, i) => isMembers[i]);
     }
 
+    Groups.getUserOtherGroups = async function (uids) {
+        return await Groups.getUserOtherGroupsFromSet('groups:visible:createtime', uids);
+    };
+
+    Groups.getUserOtherGroupsFromSet = async function (set, uids) {
+        const memberOf = await Groups.getUserOtherGroupMembership(set, uids);
+        return await Promise.all(memberOf.map(memberOf => Groups.getGroupsData(memberOf)));
+    };
+
+    Groups.getUserOtherGroupMembership = async function (set, uids) {
+        const groupNames = await db.getSortedSetRevRange(set, 0, -1);
+        return await Promise.all(uids.map(uid => findUserOtherGroups(uid, groupNames)));
+    };
+
+    async function findUserOtherGroups(uid, groupNames) {
+        const isMembers = await Groups.isMemberOfGroups(uid, groupNames);
+        return groupNames.filter((name, i) => !isMembers[i]);
+    }
+
     Groups.getUserInviteGroups = async function (uid) {
         let allGroups = await Groups.getNonPrivilegeGroups('groups:createtime', 0, -1);
         allGroups = allGroups.filter(group => !Groups.ephemeralGroups.includes(group.name));

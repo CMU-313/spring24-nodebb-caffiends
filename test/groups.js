@@ -9,6 +9,8 @@ const nconf = require('nconf');
 const db = require('./mocks/databasemock');
 const helpers = require('./helpers');
 const Groups = require('../src/groups');
+const topics = require('../src/topics');
+const categories = require('../src/categories');
 const User = require('../src/user');
 const socketGroups = require('../src/socket.io/groups');
 const apiGroups = require('../src/api/groups');
@@ -399,6 +401,17 @@ describe('Groups', () => {
                         assert.strictEqual(data.userTitleEnabled, 0);
                         done();
                     });
+                });
+            });
+        });
+
+        it('should create a classLabel for a group', (done) => {
+            Groups.create({ name: 'class label group' }, (err) => {
+                assert.ifError(err);
+                db.isSetMember('classLabel:class label group', 'class label group', (err, isMember) => {
+                    assert.ifError(err);
+                    assert(isMember);
+                    done();
                 });
             });
         });
@@ -1479,5 +1492,100 @@ describe('Groups', () => {
             const groupData = await db.getObjectFields('group:Test', ['cover:url']);
             assert(!groupData['cover:url']);
         });
+    });
+
+    describe('group posts', () => {
+        it('should get only posts with classLabel corresponding to the group', (done) => {
+            // create two groups
+            const groupName1 = 'a';
+            const groupName2 = 'b';
+            let pid = '';
+            async.waterfall([
+                function (next) {
+                    Groups.create({ name: groupName1 }, next);
+                },
+                function (groupData, next) {
+                    Groups.create({ name: groupName2 }, next);
+                },
+                function (groupData, next) {
+                    Groups.join([groupName1, groupName2], adminUid, next);
+                },
+                function (next) {
+                    categories.create({
+                        name: 'classLabel Test Category',
+                        description: 'Test category made by test script',
+                    }, next);
+                },
+                function (categoryObj, next) {
+                    topics.post({
+                        uid: adminUid,
+                        title: 'classLabel topic test title',
+                        content: 'classLabel topic test content',
+                        cid: categoryObj.cid,
+                        classLabel: groupName1,
+                    }, next);
+                },
+                function (result, next) {
+                    pid = result.postData.pid;
+                    Groups.getLatestMemberPosts(groupName1, 1, adminUid, next);
+                },
+                function (posts, next) {
+                    assert.equal(posts[0].pid, pid);
+                    Groups.getLatestMemberPosts(groupName2, 1, adminUid, next);
+                },
+                function (posts, next) {
+                    assert.equal(posts.length, 0);
+                    next();
+                },
+            ], done);
+        });
+    });
+});
+
+describe('Group membership tests', () => {
+    let userUid;
+    let memberGroups;
+    let otherGroups;
+
+    const groupName1 = 'groupA';
+    const groupName2 = 'groupB';
+    const groupName3 = 'groupC';
+    const groupName4 = 'groupD';
+    const groupName5 = 'groupE';
+
+    before(async () => {
+        // Create groups
+        await Groups.create({ name: groupName1 });
+        await Groups.create({ name: groupName2 });
+        await Groups.create({ name: groupName3 });
+        await Groups.create({ name: groupName4 });
+        await Groups.create({ name: groupName5 });
+        // Create a user and save the uid for later use
+        userUid = await User.create({
+            username: 'testuser',
+            email: 'test@example.com',
+        });
+
+        // Have user join two of the groups
+        await Groups.join([groupName1, groupName2, groupName3], userUid);
+    });
+
+    it('getUserGroups should return 2 groups the user is a member of', async () => {
+        memberGroups = await Groups.getUserGroups([userUid]);
+        memberGroups = memberGroups[0];
+        assert.strictEqual(memberGroups.length, 3);
+        const memberGroupNames = memberGroups.map(group => group.name);
+        assert(memberGroupNames.includes(groupName1), 'User should be a member of groupName1');
+        assert(memberGroupNames.includes(groupName2), 'User should be a member of groupName2');
+        assert(memberGroupNames.includes(groupName3), 'User should be a member of groupName3');
+    });
+
+    it('getUserOtherGroups should return 1 group the user is not a member of', async () => {
+        otherGroups = await Groups.getUserOtherGroups([userUid]);
+        otherGroups = otherGroups[0];
+        assert.strictEqual(otherGroups.length, 2);
+        const otherGroupNames = otherGroups.map(group => group.name);
+        assert(otherGroupNames.includes(groupName4), 'User should not be a member of groupName3');
+        assert(otherGroupNames.includes(groupName5), 'User should not be a member of groupName3');
     });
 });

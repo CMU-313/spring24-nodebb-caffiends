@@ -9,35 +9,43 @@ const user = require('../user');
 const helpers = require('./helpers');
 const pagination = require('../pagination');
 const privileges = require('../privileges');
+// const user = require('../user');
+const accountHelpers = require('./accounts/helpers');
 
 const groupsController = module.exports;
 
 groupsController.list = async function (req, res) {
-    // const userData = await accountHelpers.getUserDataByUserSlug(req.params.userslug, req.uid, req.query);
-    // if (!userData) {
-    //     return next();
-    // }
-    // let groupsData = await groups.getUserGroups([userData.uid]);
-    // groupsData = groupsData[0];
-    // const groupNames = groupsData.filter(Boolean).map(group => group.name);
-    // const members = await groups.getMemberUsers(groupNames, 0, 3);
-    // groupsData.forEach((group, index) => {
-    //     group.members = members[index];
-    // });
-    // userData.groups = groupsData;
-    // userData.title = `[[pages:account/groups, ${userData.username}]]`;
-    // userData.breadcrumbs = helpers.buildBreadcrumbs([{ text: userData.username, url: `/user/${userData.userslug}` }, { text: '[[global:header.groups]]' }]);
-    // res.render('account/groups', userData);
+    let groupData;
+    let othergroupData;
 
     const sort = req.query.sort || 'alpha';
 
-    const [groupData, allowGroupCreation] = await Promise.all([
-        groups.getGroupsBySort(sort, 0, 14),
-        privileges.global.can('group:create', req.uid),
-    ]);
+    const userslug = await user.getUserField(req.uid, 'userslug');
+    const userData = await accountHelpers.getUserDataByUserSlug(userslug, req.uid, req.query);
+    if (!userData) {
+        groupData = await groups.getGroupsBySort(sort, 0, 14);
+    } else {
+        groupData = await groups.getUserGroups([userData.uid]);
+        groupData = groupData[0];
+        const groupNames = groupData.filter(Boolean).map(group => group.name);
+        const groupmembers = await groups.getMemberUsers(groupNames, 0, 3);
+        groupData.forEach((group, index) => {
+            group.members = groupmembers[index];
+        });
+
+        othergroupData = await groups.getUserOtherGroups([userData.uid]);
+        othergroupData = othergroupData[0];
+        const othergroupNames = othergroupData.filter(Boolean).map(group => group.name);
+        const othergroupmembers = await groups.getMemberUsers(othergroupNames, 0, 3);
+        groupData.forEach((group, index) => {
+            othergroupData.members = othergroupmembers[index];
+        });
+    }
+    const allowGroupCreation = await privileges.global.can('group:create', req.uid);
 
     res.render('groups/list', {
         groups: groupData,
+        othergroups: othergroupData, // new
         allowGroupCreation: allowGroupCreation,
         nextStart: 15,
         title: '[[pages:groups]]',
@@ -47,6 +55,7 @@ groupsController.list = async function (req, res) {
 
 groupsController.details = async function (req, res, next) {
     const lowercaseSlug = req.params.slug.toLowerCase();
+
     if (req.params.slug !== lowercaseSlug) {
         if (res.locals.isAPI) {
             req.params.slug = lowercaseSlug;

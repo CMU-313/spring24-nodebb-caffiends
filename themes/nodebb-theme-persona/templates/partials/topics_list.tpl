@@ -51,6 +51,12 @@
                 </small>
                 <!-- ENDIF !template.category -->
 
+                {{{ if topics.classLabel }}}
+                <small>
+                    <a href="{config.relative_path}/groups/{topics.classLabel}">{topics.classLabel}</a> &bull;
+                </small>
+                {{{ end }}}
+
                 {{{ if topics.tags.length }}}
                 <span class="tag-list hidden-xs">
                     {{{each topics.tags}}}

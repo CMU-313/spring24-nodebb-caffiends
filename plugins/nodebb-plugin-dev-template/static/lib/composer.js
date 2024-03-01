@@ -432,8 +432,12 @@ define('composer', [
 		return null;
 	}
 
-	async function getGroups() {
-		return await api.get(`/api/groups`, {});
+	// getGroups: (name: string) -> object
+	async function getGroups(name) {
+		console.assert(typeof name === 'string');
+	    const groups = await api.get(`/api/user/${name}/groups`, {});
+		console.assert(typeof groups === 'object');	
+		return await groups;
 	}
 
 	// createNewComposer: (post_uuid: string) => void
@@ -452,7 +456,7 @@ define('composer', [
 		// https://github.com/NodeBB/NodeBB/issues/1951
 		// remove when 1951 is resolved
 
-		var groups = await getGroups();
+		var groups = await getGroups(app.user.userslug);
 		var groupNames = groups ? groups.groups : [];
 
 		var title = postData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
@@ -716,7 +720,7 @@ define('composer', [
 				cid: categoryList.getSelectedCid(),
 				tags: tags.getTags(post_uuid),
 				timestamp: scheduler.getTimestamp(),
-				//classLabel: classLabelList.getSelectedClassLabel(),
+				classLabel: classLabelList.getSelectedClassLabel(),
 			};
 		} else if (action === 'posts.reply') {
 			route = `/topics/${postData.tid}`;
