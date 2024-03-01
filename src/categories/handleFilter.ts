@@ -56,3 +56,4 @@ export async function filterTopicsByGroup(groupName: string): Promise<any[]> {
 document.addEventListener('DOMContentLoaded', () => {
     fetchGroups();
 });
+

@@ -36,7 +36,7 @@ module.exports = function (Topics) {
             lastposttime: 0,
             postcount: 0,
             viewcount: 0,
-            classLabel: data.classLabel,
+            classLabel: data.classLabel || '',
         };
 
         if (Array.isArray(data.tags) && data.tags.length) {
@@ -82,7 +82,6 @@ module.exports = function (Topics) {
     };
 
     Topics.post = async function (data) {
-        console.log(data);
         data = await plugins.hooks.fire('filter:topic.post', data);
         const { uid } = data;
         data.title = String(data.title).trim();
@@ -166,10 +165,10 @@ module.exports = function (Topics) {
         const { uid } = data;
 
         const topicData = await Topics.getTopicData(tid);
-
         await canReply(data, topicData);
 
         data.cid = topicData.cid;
+        data.classLabel = topicData.classLabel;
 
         await guestHandleValid(data);
         if (data.content) {
@@ -211,7 +210,7 @@ module.exports = function (Topics) {
 
         analytics.increment(['posts', `posts:byCid:${data.cid}`]);
         plugins.hooks.fire('action:topic.reply', { post: _.clone(postData), data: data });
-
+        
         return postData;
     };
 
