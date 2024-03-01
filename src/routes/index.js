@@ -100,7 +100,7 @@ _mounts.users = (app, name, middleware, controllers) => {
 };
 
 _mounts.groups = (app, name, middleware, controllers) => {
-    const middlewares = [middleware.canViewGroups];
+    const middlewares = [middleware.exposeUid, middleware.canViewUsers];
 
     setupPageRoute(app, `/${name}`, middlewares, controllers.groups.list);
     setupPageRoute(app, `/${name}/:slug`, middlewares, controllers.groups.details);

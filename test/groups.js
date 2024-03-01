@@ -1541,3 +1541,51 @@ describe('Groups', () => {
         });
     });
 });
+
+describe('Group membership tests', () => {
+    let userUid;
+    let memberGroups;
+    let otherGroups;
+
+    const groupName1 = 'groupA';
+    const groupName2 = 'groupB';
+    const groupName3 = 'groupC';
+    const groupName4 = 'groupD';
+    const groupName5 = 'groupE';
+
+    before(async () => {
+        // Create groups
+        await Groups.create({ name: groupName1 });
+        await Groups.create({ name: groupName2 });
+        await Groups.create({ name: groupName3 });
+        await Groups.create({ name: groupName4 });
+        await Groups.create({ name: groupName5 });
+        // Create a user and save the uid for later use
+        userUid = await User.create({
+            username: 'testuser',
+            email: 'test@example.com',
+        });
+
+        // Have user join two of the groups
+        await Groups.join([groupName1, groupName2, groupName3], userUid);
+    });
+
+    it('getUserGroups should return 2 groups the user is a member of', async () => {
+        memberGroups = await Groups.getUserGroups([userUid]);
+        memberGroups = memberGroups[0];
+        assert.strictEqual(memberGroups.length, 3);
+        const memberGroupNames = memberGroups.map(group => group.name);
+        assert(memberGroupNames.includes(groupName1), 'User should be a member of groupName1');
+        assert(memberGroupNames.includes(groupName2), 'User should be a member of groupName2');
+        assert(memberGroupNames.includes(groupName3), 'User should be a member of groupName3');
+    });
+
+    it('getUserOtherGroups should return 1 group the user is not a member of', async () => {
+        otherGroups = await Groups.getUserOtherGroups([userUid]);
+        otherGroups = otherGroups[0];
+        assert.strictEqual(otherGroups.length, 2);
+        const otherGroupNames = otherGroups.map(group => group.name);
+        assert(otherGroupNames.includes(groupName4), 'User should not be a member of groupName3');
+        assert(otherGroupNames.includes(groupName5), 'User should not be a member of groupName3');
+    });
+});
