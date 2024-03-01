@@ -1,37 +1,64 @@
 import { populateDropdown, filterTopicsByGroup } from 'src/categories/handleFilter.ts';
 
 describe('filterCoursesByGroup', () => {
-    // Mock the console.log to test if it gets called
     const logSpy = jest.spyOn(console, 'log');
+    let firstGroupLink;
+    let secondGroupLink;
 
-    // Simulate the DOM structure for the dropdown
-    document.body.innerHTML = '<ul class="dropdown-menu pull-right">' +
-                              '  <li><a href="#" class="courses-filter" data-group-name="Group 1">Group 1</a></li>' +
-                              '  <li><a href="#" class="courses-filter" data-group-name="Group 2">Group 2</a></li>' +
-                              '</ul>';
+    beforeEach(() => {
+        document.body.innerHTML = '<ul class="dropdown-menu pull-right">' +
+                                  '  <li><a href="#" class="courses-filter" data-group-name="Group 1">Group 1</a></li>' +
+                                  '  <li><a href="#" class="courses-filter" data-group-name="Group 2">Group 2</a></li>' +
+                                  '</ul>';
 
-    it('should log the correct message when a group is selected', () => {
-        // Simulate clicking the first group
-        const firstGroupLink = document.querySelector('.courses-filter');
-
-        // You need to ensure that the click handler calls filterCoursesByGroup.
-        // This might be done in the populateDropdown or another setup function.
-        // Here, we directly test filterCoursesByGroup as if it was triggered by a click.
-        firstGroupLink?.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent the default anchor action
-            const groupName = firstGroupLink.getAttribute('data-group-name');
-            if (groupName) {
-                filterCoursesByGroup(groupName);
-            }
-        });
-
-        firstGroupLink?.click();
-
-        expect(logSpy).toHaveBeenCalledWith('Filtering courses for group: Group 1');
+        firstGroupLink = document.querySelector('.courses-filter');
+        secondGroupLink = document.querySelectorAll('.courses-filter')[1];
     });
 
-    // Cleanup mock after all tests are done
-    afterAll(() => {
+    it('should filter courses by group', () => {
+        const groupName = firstGroupLink.getAttribute('data-group-name');
+        filterCoursesByGroup(groupName);
+
+        expect(logSpy).toHaveBeenCalledWith(`Filtering courses for group: ${groupName}`);
+    });
+
+    it('should prevent default behavior when clicked', () => {
+        const event = new Event('click', { bubbles: true });
+        firstGroupLink.dispatchEvent(event);
+
+        expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should filter courses for the second group', () => {
+        const groupName = secondGroupLink.getAttribute('data-group-name');
+        filterCoursesByGroup(groupName);
+
+        expect(logSpy).toHaveBeenCalledWith(`Filtering courses for group: ${groupName}`);
+    });
+
+    afterEach(() => {
         logSpy.mockRestore();
     });
+});
+it('should handle multiple group links', () => {
+    const groupLinks = document.querySelectorAll('.courses-filter');
+    groupLinks.forEach((link) => {
+        const groupName = link.getAttribute('data-group-name');
+        filterCoursesByGroup(groupName);
+
+        expect(logSpy).toHaveBeenCalledWith(`Filtering courses for group: ${groupName}`);
+    });
+});
+
+it('should handle dynamically added group links', () => {
+    const newGroupLink = document.createElement('a');
+    newGroupLink.href = '#';
+    newGroupLink.classList.add('courses-filter');
+    newGroupLink.setAttribute('data-group-name', 'New Group');
+    document.querySelector('.dropdown-menu').appendChild(newGroupLink);
+
+    const groupName = newGroupLink.getAttribute('data-group-name');
+    filterCoursesByGroup(groupName);
+
+    expect(logSpy).toHaveBeenCalledWith(`Filtering courses for group: ${groupName}`);
 });

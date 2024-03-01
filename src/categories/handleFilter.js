@@ -1,3 +1,4 @@
+"use strict";
 // Code written with help of GPT-4, 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -8,6 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.filterTopicsByGroup = exports.populateDropdown = exports.fetchGroups = void 0;
 // this function fetches the groups from the server 
 function fetchGroups() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -18,6 +21,7 @@ function fetchGroups() {
         }
     });
 }
+exports.fetchGroups = fetchGroups;
 // this function populates the dropdown with the groups
 function populateDropdown(groups) {
     const dropdown = document.querySelector('.dropdown-menu');
@@ -30,19 +34,32 @@ function populateDropdown(groups) {
         link.textContent = group.name;
         link.addEventListener('click', (event) => {
             event.preventDefault();
-            filterCoursesByGroup(group.name);
+            filterTopicsByGroup(group.name);
         });
         listItem.appendChild(link);
         dropdown.appendChild(listItem);
     });
 }
-// Define a function to filter courses based on the group name.
-function filterCoursesByGroup(groupName) {
-    console.log(`Filtering courses for group: ${groupName}`);
-    // Implement the logic to filter courses based on the selected group.
-    // This might involve making another API call to fetch the filtered data
-    // and updating the DOM to reflect the filtered courses.
+exports.populateDropdown = populateDropdown;
+function filterTopicsByGroup(groupName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // Making an API call to fetch topics based on the groupName
+            const response = yield fetch(`/api/topic?group=${encodeURIComponent(groupName)}`);
+            if (!response.ok) {
+                throw new Error(`Error fetching topics for group ${groupName}: ${response.statusText}`);
+            }
+            const topics = yield response.json();
+            // Assuming the response is an array of topics
+            return topics;
+        }
+        catch (error) {
+            console.error(`An error occurred while fetching topics for group ${groupName}: ${error}`);
+            return []; // Return an empty array in case of error
+        }
+    });
 }
+exports.filterTopicsByGroup = filterTopicsByGroup;
 // this function is listener
 document.addEventListener('DOMContentLoaded', () => {
     fetchGroups();
