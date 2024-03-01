@@ -1,3 +1,26 @@
+## Michael Wang Documentation
+
+The feature I tried to implemement is to add "filter by Course" and "filter by Author" option when the user is viewing topics after clicked into categories.js (by utilizing group tag and author). With this feature, the user is able to view the posts that are relevant to their course more easily, and they can also find their instructors quicker. 
+
+### Filter Functionality 
+- Allow user to filter all of the topics in every category by Course name
+- Allow user to filter all of the topics in every category by Author name
+
+### Filter User Testing
+This is the frontend visual for the two filter buttons: 
+![alt text](filter_1.png)
+![alt text](filter_2.png)
+
+### Filter Unit Tests: 
+test/filterCourseTest.js
+- Test handles the following scenerios:
+- Should filter courses by group
+- Should prevent default behavior when clicked
+- Should filter courses for the second group
+- Should handle multiple group links
+- Should handle dynamically added group links
+
+=======
 ## Kate Lee Documentation
 
 The feature I worked on is filtering the main Groups page into two different subsections called My Groups and Other Groups. This was deemed a useful feature, as if a user sees all groups that exists on nodebb in one big page (i.e. a CMU student seeing all CMU classes to currently exist on nodebb), it is very hard for the user to find the groups they actually want to see, which are the groups that they are a part of. In My Groups, the user should see the groups that they are a member of, and in Other Groups should be all the other groups that the user is not a part of. Clicking on the groups themselves acts the same way as it did previously, leading the user to the page specific to the group.
