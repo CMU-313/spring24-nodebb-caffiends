@@ -5,7 +5,7 @@ const validator = require('validator');
 const _ = require('lodash');
 
 const db = require('../database');
-const user = require('../user');
+const user = require('../user'); 
 const topics = require('../topics');
 const groups = require('../groups');
 const meta = require('../meta');
