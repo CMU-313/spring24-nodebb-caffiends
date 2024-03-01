@@ -18,6 +18,7 @@
 	"modules": {
 		"composer.js": "./static/lib/composer.js",
 		"composer/categoryList.js": "./static/lib/composer/categoryList.js",
+		"composer/classLabelList.js": "./static/lib/composer/classLabelList.js",
 		"composer/controls.js": "./static/lib/composer/controls.js",
 		"composer/drafts.js": "./static/lib/composer/drafts.js",
 		"composer/formatting.js": "./static/lib/composer/formatting.js",
