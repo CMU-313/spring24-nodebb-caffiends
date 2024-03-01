@@ -14,9 +14,9 @@ This is the frontend visual for the two filter buttons:
 ### Filter Unit Tests: 
 test/filterCourseTest.js
 - Test handles the following scenerios:
--- Should filter courses by group
--- Should prevent default behavior when clicked
--- Should filter courses for the second group
--- Should handle multiple group links
--- Should handle dynamically added group links
+- Should filter courses by group
+- Should prevent default behavior when clicked
+- Should filter courses for the second group
+- Should handle multiple group links
+- Should handle dynamically added group links
 
