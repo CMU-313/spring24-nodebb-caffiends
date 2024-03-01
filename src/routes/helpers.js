@@ -7,7 +7,6 @@ const controllerHelpers = require('../controllers/helpers');
 
 // router, name, middleware(deprecated), middlewares(optional), controller
 helpers.setupPageRoute = function (...args) {
-    // console.log("inside src/routes/helpers.js");
     const [router, name] = args;
     let middlewares = args.length > 3 ? args[args.length - 2] : [];
     const controller = args[args.length - 1];
@@ -32,10 +31,7 @@ helpers.setupPageRoute = function (...args) {
         middleware.buildHeader,
         helpers.tryRoute(controller)
     );
-    
-    let apiname = `/api${name}`;
-    // console.log(apiname);
-    router.get(apiname, middlewares, helpers.tryRoute(controller));
+    router.get(`/api${name}`, middlewares, helpers.tryRoute(controller));
 };
 
 // router, name, middleware(deprecated), middlewares(optional), controller

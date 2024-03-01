@@ -15,26 +15,16 @@ const accountHelpers = require('./accounts/helpers');
 const groupsController = module.exports;
 
 groupsController.list = async function (req, res) {
-
-    // // groupsController.get = async function (req, res, next) {
-    // console.log(req.uid);]
-    console.log(req.uid);
+    let groupData;
+    let othergroupData;
 
     const sort = req.query.sort || 'alpha';
 
     const userslug = await user.getUserField(req.uid, 'userslug');
     const userData = await accountHelpers.getUserDataByUserSlug(userslug, req.uid, req.query);
-    // console.log("hello!");
-    
-
-    var groupData;
-    var othergroupData;
     if (!userData) {
         groupData = await groups.getGroupsBySort(sort, 0, 14);
-    }
-    else {
-        console.log(userData.uid);
-
+    } else {
         groupData = await groups.getUserGroups([userData.uid]);
         groupData = groupData[0];
         const groupNames = groupData.filter(Boolean).map(group => group.name);
@@ -43,30 +33,15 @@ groupsController.list = async function (req, res) {
             group.members = groupmembers[index];
         });
 
-        // let allGroups = await groups.getGroupsBySort(sort, 0, 14);
         othergroupData = await groups.getUserOtherGroups([userData.uid]);
-
-        // othergroupData = allGroups.filter(group => !groupData.some(userGroup => userGroup.name === group.name));
         othergroupData = othergroupData[0];
         const othergroupNames = othergroupData.filter(Boolean).map(group => group.name);
         const othergroupmembers = await groups.getMemberUsers(othergroupNames, 0, 3);
         groupData.forEach((group, index) => {
             othergroupData.members = othergroupmembers[index];
         });
-        
     }
-    
-    // res.render('account/groups', userData);
-    // };
-
-    
-
     const allowGroupCreation = await privileges.global.can('group:create', req.uid);
-
-    // const [groupData, allowGroupCreation] = await Promise.all([
-    //     groups.getGroupsBySort(sort, 0, 14),
-    //     privileges.global.can('group:create', req.uid),
-    // ]);
 
     res.render('groups/list', {
         groups: groupData,
@@ -80,7 +55,6 @@ groupsController.list = async function (req, res) {
 
 groupsController.details = async function (req, res, next) {
     const lowercaseSlug = req.params.slug.toLowerCase();
-    console.log(req.params.slug);
 
     if (req.params.slug !== lowercaseSlug) {
         if (res.locals.isAPI) {
