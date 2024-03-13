@@ -1,5 +1,5 @@
 export type ClassLabelObject = {
-    value: string;
-    color: string;
-    bgColor: string;
-}
+  value: string;
+  color: string;
+  bgColor: string;
+};
