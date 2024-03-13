@@ -1,5 +1,5 @@
-import { UserObjectSlim } from './user';
-import { ClassLabelObject } from './classLabel';
+import { UserObjectSlim } from "./user";
+import { ClassLabelObject } from "./classLabel";
 
 export type GroupDataObject = {
   name: string;
@@ -15,9 +15,9 @@ export type GroupDataObject = {
   private: number;
   disableJoinRequests: number;
   disableLeave: number;
-  'cover:url': string;
-  'cover:thumb:url': string;
-  'cover:position': string;
+  "cover:url": string;
+  "cover:thumb:url": string;
+  "cover:position": string;
   nameEncoded: string;
   displayName: string;
   labelColor: string;
