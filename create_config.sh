@@ -25,18 +25,6 @@ if [[ -z "${DEPLOYMENT_URL+x}" ]]; then
   exit 1
 fi
 
-if [[ -z "${ADMIN_USER+x}" ]]; then
-  # var is not defined
-  echo "Error: ADMIN_USER is not defined!"
-  exit 1
-fi
-
-if [[ -z "${ADMIN_PASSWORD+x}" ]]; then
-  # var is not defined
-  echo "Error: ADMIN_PASSWORD is not defined!"
-  exit 1
-fi
-
 # Read the JSON file
 json_data=$(cat "/usr/src/app/config_template.json")
 
@@ -45,8 +33,6 @@ json_data=$(jq --arg deployment_url "$DEPLOYMENT_URL" '.url = $deployment_url' <
 json_data=$(jq --arg host "$REDIS_HOST" '.redis.host = $host' <<< "$json_data")
 json_data=$(jq --arg port "$REDIS_PORT" '.redis.port = $port' <<< "$json_data")
 json_data=$(jq --arg password "$REDIS_PASSWORD" '.redis.password = $password' <<< "$json_data")
-json_data=$(jq --arg username "$ADMIN_USER" '.username = $username' <<< "$json_data") 
-json_data=$(jq --arg password "$ADMIN_PASSWORD" '.password = $password' <<< "$json_data")
 
 # Write the updated JSON file to config.json
 echo "$json_data" > "/usr/src/app/config.json"
