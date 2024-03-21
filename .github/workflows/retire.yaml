@@ -3,7 +3,7 @@ name: Retire
 on:
   push:
     branches:
-      - main
+      - '*'
   pull_request:
     branches:
       - main
