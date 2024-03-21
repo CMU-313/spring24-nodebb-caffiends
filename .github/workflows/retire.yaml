@@ -80,4 +80,4 @@ jobs:
           node app --setup="${SETUP}" --ci="${CI}"
 
       - name: Run Retire
-        run: retire
+        run: npm run retire
