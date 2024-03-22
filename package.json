@@ -14,8 +14,7 @@
         "lint": "npx tsc && eslint --cache ./nodebb .",
         "test": "npx tsc && nyc --reporter=html --reporter=text-summary mocha",
         "coverage": "nyc report --reporter=text-lcov > ./coverage/lcov.info",
-        "coveralls": "nyc report --reporter=text-lcov | coveralls && rm -r coverage",
-        "retire": "npx tsc && retire --severity critical"
+        "coveralls": "nyc report --reporter=text-lcov | coveralls && rm -r coverage"
     },
     "nyc": {
         "exclude": [
@@ -117,6 +116,7 @@
         "prompt": "1.3.0",
         "request": "2.88.2",
         "request-promise-native": "1.0.9",
+        "retire": "^5.0.0-beta.1",
         "rimraf": "3.0.2",
         "rss": "1.2.2",
         "sanitize-html": "2.8.1",
